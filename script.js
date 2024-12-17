@@ -44,8 +44,9 @@ const ticTacToe = (function (){
 
         let currentPlayer = players[0].playerSign;
 
-        const switchPlayerTurn = () =>{
-            currentPlayer = currentPlayer === players[0].playerSign ? players[1].playerSign : players[0].playerSign;
+        let switchPlayerTurn = () =>{
+            const getActivePlayer = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+            // currentPlayer = currentPlayer === players[0].playerSign ? players[1].playerSign : players[0].playerSign;
             // 'X' ? 'O' : 'X';
         };
 
@@ -108,6 +109,7 @@ const ticTacToe = (function (){
                     return { status: "draw" };
                 } 
                 switchPlayerTurn(); 
+                printNewRound();
                 return { status: "continue" };
             
                 
@@ -118,7 +120,7 @@ const ticTacToe = (function (){
                 playRound,
                 getActivePlayer,
                 getBoard: board.getBoard,
-                
+                switchPlayerTurn,
             };
         
     }
@@ -134,7 +136,6 @@ function displayController(){
     const game = ticTacToe();
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
-    console.log(game.getBoard());
     const updateScreen = () =>{
         //this is to clear the board
         boardDiv.textContent = "";
@@ -163,12 +164,14 @@ function displayController(){
 
 
                 square.addEventListener('click',(e)=>{
+                    let currentPlayer = activePlayer.playerSign;
+                   let switchedPlayer = game.switchPlayerTurn();
                     const selectedRow = parseInt(e.target.dataset.row, 10);
                     const selectedColumn = parseInt(e.target.dataset.column, 10);
 
                     const result = game.playRound(selectedRow,selectedColumn);
 
-                    const currentPlayer = activePlayer.playerSign;
+                    
                        game.getBoard()[rowIndex][colIndex] = currentPlayer;   
                        square.textContent = currentPlayer;
                      
@@ -184,10 +187,13 @@ function displayController(){
                     } else if (result.status === "draw") {
                         alert("It's a draw!");
                     }
+
+                    currentPlayer = activePlayer.playerSign;
                       
                        console.log(game.getBoard());
-                                
+        
                        updateScreen();
+                      
                 });
 
                
