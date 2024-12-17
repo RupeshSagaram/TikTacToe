@@ -2,7 +2,7 @@
 const ticTacToe = (function (){
     function gameBoard(){
         
-        const board = [
+        let board = [
         [' ', ' ', ' '],
         [' ', ' ', ' '],
         [' ', ' ', ' ']
@@ -29,8 +29,8 @@ const ticTacToe = (function (){
     ){
 
 
-        const board = gameBoard();
-        const boardArray = board.getBoard();
+        let board = gameBoard();
+        let boardArray = board.getBoard();
         const players =[
             {
                 name: playerOneName,
@@ -55,8 +55,10 @@ const ticTacToe = (function (){
 
         const printNewRound = () => {
             board.printBoard();
-            console.log(`${currentPlayer}'s turn`);
+            console.log(`${currentPlayer.playerSign}'s turn`);
         };
+
+        
 
         const playRound = (selectedRow, selectedColumn) =>{
 
@@ -94,15 +96,19 @@ const ticTacToe = (function (){
                 
             if (boardArray[selectedRow][selectedColumn] !== ' ') {
                 console.log('Invalid move. Try again.');
-                return { status: "invalid" };
+                 return { status: "invalid" };
+                
             }
             
             boardArray[selectedRow][selectedColumn] = currentPlayer;
+
+            console.log(boardArray);
              
                 const winner = checkWin();
                 if (winner) {
                     board.printBoard();
                     console.log(`${winner} wins!`);
+                    
                     return { status: "win", winner };
                 } else if (isBoardFull()) {
                     console.log('Draw!');
@@ -112,15 +118,26 @@ const ticTacToe = (function (){
                 printNewRound();
                 return { status: "continue" };
             
-                
+                 
             
-        };    
+        };   
+
+        const restart = () =>{
+            
+            currentPlayer = players[0].playerSign;
+            
+              
+        }
+        
+            
+        
 
             return {
                 playRound,
                 getActivePlayer,
                 getBoard: board.getBoard,
                 switchPlayerTurn,
+                restart,
             };
         
     }
@@ -136,16 +153,35 @@ function displayController(){
     const game = ticTacToe();
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+
+    const resetBoardArray = () => {
+        let board = game.getBoard(); // Access the current board array
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                board[i][j] = " "; // Set each element to an empty string
+            }
+        }
+        console.log("Board reset:", board); // Debugging: log the reset board
+    };
+
     const updateScreen = () =>{
         //this is to clear the board
         boardDiv.textContent = "";
 
          // get the newest version of the board and player turn
-         const board = game.getBoard();
+         let board = game.getBoard();
         const activePlayer = game.getActivePlayer();
+        
         //display player's turn
-        playerTurnEl.textContent = `${activePlayer.name}'s turn`;
+        playerTurnEl.textContent = `${activePlayer.name}'s (${activePlayer.playerSign}) turn`;
 
+
+        const resetGame = () => {
+            game.restart(); // Reset the game state
+            resetBoardArray();
+            updateScreen();
+           
+        };
         //render board squares
 
         board.forEach((row,rowIndex)=>{
@@ -165,7 +201,8 @@ function displayController(){
 
                 square.addEventListener('click',(e)=>{
                     let currentPlayer = activePlayer.playerSign;
-                   let switchedPlayer = game.switchPlayerTurn();
+                    
+                
                     const selectedRow = parseInt(e.target.dataset.row, 10);
                     const selectedColumn = parseInt(e.target.dataset.column, 10);
 
@@ -173,8 +210,8 @@ function displayController(){
 
                     
                        game.getBoard()[rowIndex][colIndex] = currentPlayer;   
-                       square.textContent = currentPlayer;
-                     
+                       
+                       
 
                     if(result.status === "invalid"){
                         alert("Invalid move! Try again.");
@@ -184,13 +221,23 @@ function displayController(){
                     
                     if (result.status === "win") {
                         alert(`${result.winner} wins!`);
+                        resetGame();
+                        
+                        playerTurnEl.textContent = `${activePlayer.name}'s (${activePlayer.playerSign}) turn`;
+                        console.log(game.getBoard());
+                        return board;
+                        
                     } else if (result.status === "draw") {
                         alert("It's a draw!");
+                        resetGame();
+                        return;
                     }
 
-                    currentPlayer = activePlayer.playerSign;
-                      
-                       console.log(game.getBoard());
+                    square.textContent = game.getBoard()[rowIndex][colIndex];
+                    
+                    // currentPlayer = activePlayer.playerSign;
+                    
+                       
         
                        updateScreen();
                       
