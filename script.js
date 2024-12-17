@@ -43,6 +43,7 @@ const ticTacToe = (function (){
         ];
 
         let currentPlayer = players[0].playerSign;
+        let initialPlayer = players[0];
 
         let switchPlayerTurn = () =>{
             const getActivePlayer = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -138,6 +139,7 @@ const ticTacToe = (function (){
                 getBoard: board.getBoard,
                 switchPlayerTurn,
                 restart,
+                initialPlayer,
             };
         
     }
@@ -153,6 +155,7 @@ function displayController(){
     const game = ticTacToe();
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+    let player = game.initialPlayer;
 
     const resetBoardArray = () => {
         let board = game.getBoard(); // Access the current board array
@@ -202,6 +205,7 @@ function displayController(){
                 square.addEventListener('click',(e)=>{
                     let currentPlayer = activePlayer.playerSign;
                     
+                    
                 
                     const selectedRow = parseInt(e.target.dataset.row, 10);
                     const selectedColumn = parseInt(e.target.dataset.column, 10);
@@ -223,7 +227,7 @@ function displayController(){
                         alert(`${result.winner} wins!`);
                         resetGame();
                         
-                        playerTurnEl.textContent = `${activePlayer.name}'s (${activePlayer.playerSign}) turn`;
+                        playerTurnEl.textContent = `${player.name}'s (${player.playerSign}) turn`;
                         console.log(game.getBoard());
                         return board;
                         
@@ -234,7 +238,6 @@ function displayController(){
                     }
 
                     square.textContent = game.getBoard()[rowIndex][colIndex];
-                    
                     // currentPlayer = activePlayer.playerSign;
                     
                        
