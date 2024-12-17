@@ -49,6 +49,7 @@ const ticTacToe = (function (){
             // 'X' ? 'O' : 'X';
         };
 
+    
         const getActivePlayer = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
 
         const printNewRound = () => {
@@ -56,11 +57,10 @@ const ticTacToe = (function (){
             console.log(`${currentPlayer}'s turn`);
         };
 
-        const playRound = () =>{
+        const playRound = (selectedRow, selectedColumn) =>{
 
 
-
-            function checkWin() {
+            const checkWin = () => {
                 // Check rows
                 for (let i = 0; i < 3; i++) {
                     if (boardArray[i][0] === boardArray[i][1] && boardArray[i][1] === boardArray[i][2] && boardArray[i][0] !== ' ') {
@@ -86,49 +86,39 @@ const ticTacToe = (function (){
                 return null;
             }
             
-            function isBoardFull() {
-                for (let i = 0; i < 3; i++) {
-                    for (let j = 0; j < 3; j++) {
-                        if (boardArray[i][j] === ' ') {
-                            return false;
-                        }
-                    }
-                }
-                return true;
+            const isBoardFull = () => {
+                return boardArray.every(row => row.every(cell => cell !== ' '));
+            };
+            
+                
+            if (boardArray[selectedRow][selectedColumn] !== ' ') {
+                console.log('Invalid move. Try again.');
+                return { status: "invalid" };
             }
             
-            while (true) {
-                printNewRound();
-            
-                const row = prompt('Enter row (0-2): ');
-                const col = prompt('Enter column (0-2): ');
-            
-                if (row < 0 || row > 2 || col < 0 || col > 2 || boardArray[row][col] !== ' ') {
-                    console.log('Invalid move. Try again.');
-                    continue;
-                }
-            
-                boardArray[row][col] = currentPlayer;
-            
+            boardArray[selectedRow][selectedColumn] = currentPlayer;
+             
                 const winner = checkWin();
                 if (winner) {
                     board.printBoard();
                     console.log(`${winner} wins!`);
-                    break;
+                    return { status: "win", winner };
                 } else if (isBoardFull()) {
                     console.log('Draw!');
-                    break;
-                }
+                    return { status: "draw" };
+                } 
+                switchPlayerTurn(); 
+                return { status: "continue" };
+            
                 
             
-                switchPlayerTurn(); 
-            }
         };    
 
             return {
                 playRound,
                 getActivePlayer,
-                getBoard: board.getBoard
+                getBoard: board.getBoard,
+                
             };
         
     }
@@ -141,10 +131,10 @@ const ticTacToe = (function (){
 
 
 function displayController(){
-    const game = ticTacToe;
+    const game = ticTacToe();
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
-
+    console.log(game.getBoard());
     const updateScreen = () =>{
         //this is to clear the board
         boardDiv.textContent = "";
@@ -152,7 +142,6 @@ function displayController(){
          // get the newest version of the board and player turn
          const board = game.getBoard();
         const activePlayer = game.getActivePlayer();
-
         //display player's turn
         playerTurnEl.textContent = `${activePlayer.name}'s turn`;
 
@@ -165,26 +154,50 @@ function displayController(){
                 const square = document.createElement("div");
                 square.classList.add("square");
                 square.textContent = cell;
+                square.dataset.row = rowIndex;
+                square.dataset.column = colIndex;
+                boardDiv.appendChild(square);
 
                 //add click event to handle moves
 
-                square.addEventListener('click',()=>{
-                    if(cell === ' '){
-                       //only allow clicking on empty squares
-                       const currentPlayer = activePlayer.playerSign;
-                       game.getBoard()[rowIndex][colIndex] = currentPlayer;
-                       game.playRound();
-                       updateScreen();         
+
+
+                square.addEventListener('click',(e)=>{
+                    const selectedRow = parseInt(e.target.dataset.row, 10);
+                    const selectedColumn = parseInt(e.target.dataset.column, 10);
+
+                    const result = game.playRound(selectedRow,selectedColumn);
+
+                    const currentPlayer = activePlayer.playerSign;
+                       game.getBoard()[rowIndex][colIndex] = currentPlayer;   
+                       square.textContent = currentPlayer;
+                     
+
+                    if(result.status === "invalid"){
+                        alert("Invalid move! Try again.");
+                        return;
                     }
+                    
+                    
+                    if (result.status === "win") {
+                        alert(`${result.winner} wins!`);
+                    } else if (result.status === "draw") {
+                        alert("It's a draw!");
+                    }
+                      
+                       console.log(game.getBoard());
+                                
+                       updateScreen();
                 });
-                boardDiv.appendChild(square);   
+
+               
             });
             
         });
 
-        }
+    }
 
-
+    updateScreen();
 }
 
 

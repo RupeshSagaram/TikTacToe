@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: center;
     border: 1px solid black;
-    height: 100px;
+    height: 162px;
     font-size: 24px;
     cursor: pointer;
 }
@@ -23,7 +23,6 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     border: 1px solid black;
-    gap: 2px;
     padding: 2px;
     background-color: yellow;
   }
