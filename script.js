@@ -102,8 +102,6 @@ const ticTacToe = (function (){
             
                 return null;
             }
-            
-            
 
            
              
@@ -112,17 +110,17 @@ const ticTacToe = (function (){
                     // board.printBoard();
                     console.log(`${winner} wins!`);  
                     return { status: "win", winner };
-                } else if (isBoardFull()) {
+                } 
+                
+                if (isBoardFull()) {
                     console.log('Draw!');
                     return { status: "draw" };
                 } 
 
-                if(winner){
-                    return;
-                } else{
+                
                     switchPlayerTurn(); 
                     return { status: "continue" };
-                }
+                
 
                 
             
@@ -238,8 +236,8 @@ function displayController(){
                         gameOver =true;
                         resetGame();
                         
-                        playerTurnEl.textContent = `${player.name}'s (${player.playerSign}) turn`;
-                        updateScreen();
+                        // playerTurnEl.textContent = `${player.name}'s (${player.playerSign}) turn`;
+                        // updateScreen();
                         return;
                         
                     } else if (result.status === "draw") {
@@ -255,8 +253,8 @@ function displayController(){
                     // currentPlayer = activePlayer.playerSign;
                     
                        
-        
-                       updateScreen();
+                    updateScreen();
+                       
                       
                 });
 
