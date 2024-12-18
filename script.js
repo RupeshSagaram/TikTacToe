@@ -62,7 +62,20 @@ const ticTacToe = (function (){
         
 
         const playRound = (selectedRow, selectedColumn) =>{
-
+            
+            const isBoardFull = () => {
+                return boardArray.every(row => row.every(cell => cell !== ' '));
+            };
+            
+                
+            if (boardArray[selectedRow][selectedColumn] !== ' ') {
+                console.log('Invalid move. Try again.');
+                 return { status: "invalid" };
+                
+            }
+            
+            boardArray[selectedRow][selectedColumn] = currentPlayer;
+            console.log(boardArray);
 
             const checkWin = () => {
                 // Check rows
@@ -90,34 +103,28 @@ const ticTacToe = (function (){
                 return null;
             }
             
-            const isBoardFull = () => {
-                return boardArray.every(row => row.every(cell => cell !== ' '));
-            };
             
-                
-            if (boardArray[selectedRow][selectedColumn] !== ' ') {
-                console.log('Invalid move. Try again.');
-                 return { status: "invalid" };
-                
-            }
-            
-            boardArray[selectedRow][selectedColumn] = currentPlayer;
 
-            console.log(boardArray);
+           
              
                 const winner = checkWin();
                 if (winner) {
-                    board.printBoard();
-                    console.log(`${winner} wins!`);
-                    
+                    // board.printBoard();
+                    console.log(`${winner} wins!`);  
                     return { status: "win", winner };
                 } else if (isBoardFull()) {
                     console.log('Draw!');
                     return { status: "draw" };
                 } 
-                switchPlayerTurn(); 
-                printNewRound();
-                return { status: "continue" };
+
+                if(winner){
+                    return;
+                } else{
+                    switchPlayerTurn(); 
+                    return { status: "continue" };
+                }
+
+                
             
                  
             
@@ -156,6 +163,7 @@ function displayController(){
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
     let player = game.initialPlayer;
+    let gameOver = false; // added flag to check if game is over
 
     const resetBoardArray = () => {
         let board = game.getBoard(); // Access the current board array
@@ -182,7 +190,9 @@ function displayController(){
         const resetGame = () => {
             game.restart(); // Reset the game state
             resetBoardArray();
+            gameOver = false;
             updateScreen();
+           
            
         };
         //render board squares
@@ -203,6 +213,10 @@ function displayController(){
 
 
                 square.addEventListener('click',(e)=>{
+                    if(gameOver){
+                        return;
+                    }
+
                     let currentPlayer = activePlayer.playerSign;
                     
                     
@@ -212,30 +226,30 @@ function displayController(){
 
                     const result = game.playRound(selectedRow,selectedColumn);
 
-                    
-                       game.getBoard()[rowIndex][colIndex] = currentPlayer;   
-                       
-                       
-
                     if(result.status === "invalid"){
                         alert("Invalid move! Try again.");
+                        currentPlayer = !activePlayer.playerSign;
                         return;
                     }
                     
                     
                     if (result.status === "win") {
                         alert(`${result.winner} wins!`);
+                        gameOver =true;
                         resetGame();
                         
                         playerTurnEl.textContent = `${player.name}'s (${player.playerSign}) turn`;
-                        console.log(game.getBoard());
-                        return board;
+                        updateScreen();
+                        return;
                         
                     } else if (result.status === "draw") {
                         alert("It's a draw!");
+                        gameOver = true;
                         resetGame();
                         return;
                     }
+
+                    game.getBoard()[rowIndex][colIndex] = currentPlayer;
 
                     square.textContent = game.getBoard()[rowIndex][colIndex];
                     // currentPlayer = activePlayer.playerSign;
