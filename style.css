@@ -1,30 +1,41 @@
-.board {
+/* .board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
     width: 300px;
     margin: 0 auto;
-}
+} */
 
 .square {
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid black;
-    height: 162px;
+    height: 120px;
     font-size: 24px;
     cursor: pointer;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 1px;
+    margin:5px;
+}
+
+.square:hover {
+    /* opacity: 0.2; */
+    background-color: rgba(138, 128, 203, 0.612);
 }
 
 .board {
     display: grid;
-    height: 500px;
-    width: 500px;
+    height: auto;
+    width: 400px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    border: 1px solid black;
+    border: 1px solid rgba(255, 255, 255, 0.973);
+    border-radius: 5px;
     padding: 2px;
-    background-color: yellow;
+    background-color: rgba(255, 255, 255, 0.973);
+    margin: 0 auto;
   }
   
  
