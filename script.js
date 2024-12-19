@@ -31,11 +31,11 @@ const ticTacToe = (function (){
         const playerTwo = 'O';
         let currentPlayerName;
 
-        if(playerOne === 'X'){
-            currentPlayerName = "Player One";
-        }else if(playerTwo === 'O'){
-            currentPlayerName = "Player Two";
-        }
+        // if(playerOne === 'X'){
+        //     currentPlayerName = "Player One";
+        // }else if(playerTwo === 'O'){
+        //     currentPlayerName = "Player Two";
+        // }
 
         let board = gameBoard();
         let boardArray = board.getBoard();
@@ -170,6 +170,8 @@ function displayController(){
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
     let player = game.initialPlayer;
+    let askFirstPlayerName = prompt("Please enter first player's name: ");
+    let askSecondPlayerName = prompt("Please enter second player's name: ");
     let gameOver = false; // added flag to check if game is over
 
     const resetBoardArray = () => {
@@ -191,9 +193,11 @@ function displayController(){
         const activePlayer = game.getActivePlayer();
 
         if(activePlayer === 'X'){
-            game.currentPlayerName = "Player One";
+            game.currentPlayerName = askFirstPlayerName;
+            // game.currentPlayerName = "Player One";
         }else if(activePlayer === 'O'){
-            game.currentPlayerName = "Player Two";
+            // game.currentPlayerName = "Player Two";
+            game.currentPlayerName = askSecondPlayerName;
         }
         
         //display player's turn
