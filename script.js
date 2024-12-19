@@ -189,6 +189,12 @@ function displayController(){
          // get the newest version of the board and player turn
          let board = game.getBoard();
         const activePlayer = game.getActivePlayer();
+
+        if(activePlayer === 'X'){
+            game.currentPlayerName = "Player One";
+        }else if(activePlayer === 'O'){
+            game.currentPlayerName = "Player Two";
+        }
         
         //display player's turn
         playerTurnEl.textContent = `${game.currentPlayerName}'s (${activePlayer}) turn`;
