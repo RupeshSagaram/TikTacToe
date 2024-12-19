@@ -27,23 +27,31 @@ const ticTacToe = (function (){
         playerOneName = "Player One",
         playerTwoName = "Player Two"
     ){
+        const playerOne = 'X';
+        const playerTwo = 'O';
+        let currentPlayerName;
 
+        if(playerOne === 'X'){
+            currentPlayerName = "Player One";
+        }else if(playerTwo === 'O'){
+            currentPlayerName = "Player Two";
+        }
 
         let board = gameBoard();
         let boardArray = board.getBoard();
         const players =[
             {
                 name: playerOneName,
-                playerSign: "X"
+                playerSign: playerOne,
             },
             {
                 name: playerTwoName,
-                playerSign: "O"
+                playerSign: playerTwo,
             }
         ];
 
-        let currentPlayer = players[0].playerSign;
-        let initialPlayer = players[0];
+        let currentPlayer = playerOne;
+        let initialPlayer = playerOne;
 
         let switchPlayerTurn = () =>{
             const getActivePlayer = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -52,7 +60,7 @@ const ticTacToe = (function (){
         };
 
     
-        const getActivePlayer = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+        const getActivePlayer = () => currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
 
         const printNewRound = () => {
             board.printBoard();
@@ -130,7 +138,7 @@ const ticTacToe = (function (){
 
         const restart = () =>{
             
-            currentPlayer = players[0].playerSign;
+            currentPlayer = playerOne;
             
               
         }
@@ -145,6 +153,7 @@ const ticTacToe = (function (){
                 switchPlayerTurn,
                 restart,
                 initialPlayer,
+                currentPlayerName,
             };
         
     }
@@ -182,7 +191,7 @@ function displayController(){
         const activePlayer = game.getActivePlayer();
         
         //display player's turn
-        playerTurnEl.textContent = `${activePlayer.name}'s (${activePlayer.playerSign}) turn`;
+        playerTurnEl.textContent = `${game.currentPlayerName}'s (${activePlayer}) turn`;
 
 
         const resetGame = () => {
@@ -194,7 +203,7 @@ function displayController(){
            
         };
         //render board squares
-
+       
         board.forEach((row,rowIndex)=>{
             row.forEach((cell,colIndex)=>{
 
@@ -215,29 +224,23 @@ function displayController(){
                         return;
                     }
 
-                    let currentPlayer = activePlayer.playerSign;
-                    
-                    
-                
+                    let currentPlayer = player;
                     const selectedRow = parseInt(e.target.dataset.row, 10);
                     const selectedColumn = parseInt(e.target.dataset.column, 10);
 
                     const result = game.playRound(selectedRow,selectedColumn);
+                    square.textContent = game.getBoard()[selectedRow][selectedColumn];
 
                     if(result.status === "invalid"){
                         alert("Invalid move! Try again.");
-                        currentPlayer = !activePlayer.playerSign;
+                        //currentPlayer = !activePlayer;
                         return;
                     }
-                    
                     
                     if (result.status === "win") {
                         alert(`${result.winner} wins!`);
                         gameOver =true;
                         resetGame();
-                        
-                        // playerTurnEl.textContent = `${player.name}'s (${player.playerSign}) turn`;
-                        // updateScreen();
                         return;
                         
                     } else if (result.status === "draw") {
@@ -247,11 +250,8 @@ function displayController(){
                         return;
                     }
 
-                    game.getBoard()[rowIndex][colIndex] = currentPlayer;
+                      game.getBoard()[selectedRow][selectedColumn] = activePlayer;
 
-                    square.textContent = game.getBoard()[rowIndex][colIndex];
-                    // currentPlayer = activePlayer.playerSign;
-                    
                        
                     updateScreen();
                        
