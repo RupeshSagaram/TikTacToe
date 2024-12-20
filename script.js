@@ -68,7 +68,6 @@ const ticTacToe = (function (){
         };
 
         
-
         const playRound = (selectedRow, selectedColumn) =>{
             
             const isBoardFull = () => {
@@ -110,8 +109,6 @@ const ticTacToe = (function (){
             
                 return null;
             }
-
-           
              
                 const winner = checkWin();
                 if (winner) {
@@ -146,7 +143,6 @@ const ticTacToe = (function (){
             };
         
     }
-
     
      return gameController;
 
@@ -183,28 +179,38 @@ function displayController(){
         const activePlayer = game.getActivePlayer();
 
         if(activePlayer === 'X' ){
-                game.currentPlayerName = askFirstPlayerName;
+                if(askFirstPlayerName === "" || askFirstPlayerName === null ){
+                    game.currentPlayerName = "Player One"
+                }else{
+                    game.currentPlayerName = askFirstPlayerName;
+                }
+                
                 // game.currentPlayerName = "Player One";
             }else if(activePlayer === 'O'){
                 // game.currentPlayerName = "Player Two";
-                game.currentPlayerName = askSecondPlayerName;
+                if(askSecondPlayerName === "" || askSecondPlayerName === null ){
+                    game.currentPlayerName = "Player Two"
+                }else{
+                    game.currentPlayerName = askSecondPlayerName;
+                }
+                
                 
             }
 
-        // if(activePlayer === 'X' && !askSecondPlayerName === null || !askSecondPlayerName === ''){
+        // if(activePlayer === 'X' && askFirstPlayerName !== undefined || askFirstPlayerName !== ""){
         //     game.currentPlayerName = askFirstPlayerName;
         //     // game.currentPlayerName = "Player One";
-        // }else if(activePlayer === 'O' && !askSecondPlayerName === null || !askSecondPlayerName === ''){
+        // }else if(activePlayer === 'O' && askSecondPlayerName !== undefined || !askSecondPlayerName !== ""){
         //     // game.currentPlayerName = "Player Two";
         //     game.currentPlayerName = askSecondPlayerName;
             
         // }
-        //  else if(activePlayer === 'X' ||  askSecondPlayerName === null || askSecondPlayerName === '' ){
+        //  else if(activePlayer === 'X' &&  askFirstPlayerName === undefined || askFirstPlayerName === "" ){
         //     // game.currentPlayerName = "Player Two";
         //     game.currentPlayerName = "Player One";
         // }
         
-        // else if(activePlayer === 'O' || askSecondPlayerName === null || askSecondPlayerName === '' ){
+        // else if(activePlayer === 'O' && askSecondPlayerName === undefined || askSecondPlayerName === "" ){
         //     // game.currentPlayerName = "Player Two";
         //     game.currentPlayerName = "Player Two";
         // }
@@ -239,8 +245,6 @@ function displayController(){
                 boardDiv.appendChild(square);
 
                 //add click event to handle moves
-
-
 
                 square.addEventListener('click',(e)=>{
                     if(gameOver){
@@ -280,16 +284,13 @@ function displayController(){
                        
                       
                 });
-
-               
+  
             });
             
         });
 
     }
-
     updateScreen();
 }
-
 
 displayController();
