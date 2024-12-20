@@ -127,24 +127,13 @@ const ticTacToe = (function (){
 
                 
                     switchPlayerTurn(); 
-                    return { status: "continue" };
-                
-
-                
-            
-                 
+                    return { status: "continue" };          
             
         };   
 
-        const restart = () =>{
-            
-            currentPlayer = playerOne;
-            
-              
+        const restart = () =>{   
+            currentPlayer = playerOne;    
         }
-        
-            
-        
 
             return {
                 playRound,
@@ -169,6 +158,7 @@ function displayController(){
     const game = ticTacToe();
     const playerTurnEl = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+    const resetEl = document.querySelector('.reset');
     let player = game.initialPlayer;
     let askFirstPlayerName = prompt("Please enter first player's name: ");
     let askSecondPlayerName = prompt("Please enter second player's name: ");
@@ -192,13 +182,32 @@ function displayController(){
          let board = game.getBoard();
         const activePlayer = game.getActivePlayer();
 
-        if(activePlayer === 'X'){
-            game.currentPlayerName = askFirstPlayerName;
-            // game.currentPlayerName = "Player One";
-        }else if(activePlayer === 'O'){
-            // game.currentPlayerName = "Player Two";
-            game.currentPlayerName = askSecondPlayerName;
-        }
+        if(activePlayer === 'X' ){
+                game.currentPlayerName = askFirstPlayerName;
+                // game.currentPlayerName = "Player One";
+            }else if(activePlayer === 'O'){
+                // game.currentPlayerName = "Player Two";
+                game.currentPlayerName = askSecondPlayerName;
+                
+            }
+
+        // if(activePlayer === 'X' && !askSecondPlayerName === null || !askSecondPlayerName === ''){
+        //     game.currentPlayerName = askFirstPlayerName;
+        //     // game.currentPlayerName = "Player One";
+        // }else if(activePlayer === 'O' && !askSecondPlayerName === null || !askSecondPlayerName === ''){
+        //     // game.currentPlayerName = "Player Two";
+        //     game.currentPlayerName = askSecondPlayerName;
+            
+        // }
+        //  else if(activePlayer === 'X' ||  askSecondPlayerName === null || askSecondPlayerName === '' ){
+        //     // game.currentPlayerName = "Player Two";
+        //     game.currentPlayerName = "Player One";
+        // }
+        
+        // else if(activePlayer === 'O' || askSecondPlayerName === null || askSecondPlayerName === '' ){
+        //     // game.currentPlayerName = "Player Two";
+        //     game.currentPlayerName = "Player Two";
+        // }
         
         //display player's turn
         playerTurnEl.textContent = `${game.currentPlayerName}'s (${activePlayer}) turn`;
@@ -213,6 +222,10 @@ function displayController(){
            
         };
         //render board squares
+
+        resetEl.addEventListener('click',()=>{
+            resetGame();
+        })
        
         board.forEach((row,rowIndex)=>{
             row.forEach((cell,colIndex)=>{
